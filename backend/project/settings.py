@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -123,8 +124,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+]
+
+CSRF_COOKIE_HTTPONLY = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'http://localhost:5174',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
