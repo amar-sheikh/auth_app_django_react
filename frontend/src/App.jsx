@@ -1,30 +1,25 @@
-import { useEffect, useState } from 'react'
 import './App.css'
+import { Routes, Route } from 'react-router-dom'
+import Login from './components/Login'
+import Logout from './components/Logout'
+import Main from './components/Main'
+import SignUp from './components/SignUp'
+import EditProfile from './components/EditProfile'
+import View from './components/View'
+import ChangePassword from './components/ChangePassword'
 
 function App() {
-  const [message, setMessage] = useState('Connecting to database...!')
-
-  useEffect(()=>{
-    const connect = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/health', {
-          method: 'GET'
-        })
-
-        if (response.status === 200) {
-          setTimeout(()=> setMessage('Backend connected successfully...!'), 300)
-        }
-      }
-      catch {
-        setTimeout(()=> setMessage('Error connecting backend...!'), 300)
-      }
-    }
-
-    connect()
-  },[])
 
   return (
-    <div>{message}</div>
+    <Routes>
+      <Route path='/' element={<Main />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/logout' element={<Logout />} />
+      <Route path='/signup' element={<SignUp />} />
+      <Route path='/view' element={<View />} />
+      <Route path='/edit-profile' element={<EditProfile />} />
+      <Route path='/change-password' element={<ChangePassword />} />
+    </Routes>
   )
 }
 
