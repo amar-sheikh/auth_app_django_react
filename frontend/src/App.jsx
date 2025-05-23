@@ -8,6 +8,8 @@ import EditProfile from './components/EditProfile'
 import View from './components/View'
 import ChangePassword from './components/ChangePassword'
 import ProtectedRoute from './components/ProtectedRoute'
+import ForgetPassword from './components/ForgetPassword'
+import ResetPassword from './components/ResetPassword'
 
 function App() {
 
@@ -16,6 +18,8 @@ function App() {
       <Route path='/' element={<Main />} />
       <Route path='/login' element={<Login />} />
       <Route path='/signup' element={<SignUp />} />
+      <Route path='/forget-password' element={<ForgetPassword />} />
+      <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
 
       <Route element={<ProtectedRoute />}>
         <Route path='/logout' element={<Logout />} />

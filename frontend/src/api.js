@@ -6,5 +6,7 @@ export const API = {
     login: 'http://localhost:8000/auth/login',
     logout: 'http://localhost:8000/auth/logout',
     update: 'http://localhost:8000/auth/update',
-    update_password: 'http://localhost:8000/auth/update-password'
+    update_password: 'http://localhost:8000/auth/update-password',
+    send_password_reset_email: 'http://localhost:8000/auth/send-password-reset-email',
+    reset_password: 'http://localhost:8000/auth/reset-password'
 }
