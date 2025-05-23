@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
@@ -33,7 +33,7 @@ const ChangePassword = () => {
 
 		if (response.status === 200) {
 			setLoading(true)
-      navigate('/view')
+			navigate('/view')
 		} else {
 			const data = await response.json()
 

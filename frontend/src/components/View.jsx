@@ -1,8 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { API } from '../api'
-import { getCookie } from '../helper'
-import { useAuth } from '../contexts/AuthContext'
+import { Link } from 'react-router-dom'
 
 const View = () => {
   return (

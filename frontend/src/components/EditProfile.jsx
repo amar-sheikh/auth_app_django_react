@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
@@ -58,14 +58,14 @@ const EditProfile = () => {
   return (
     <div>
       <hr />
-      <button onClick={()=> navigate(-1)}>Go to back</button>
+      <button onClick={() => navigate(-1)}>Go to back</button>
       <hr />
       <h1>Edit profile</h1>
       <form onSubmit={update} className='form'>
         <input
           name='first_name'
           type='hidden'
-          value={formData.date_joined}/>
+          value={formData.date_joined} />
         <div>
           <div className='form-item'>
             <label htmlFor='first_name'>First name</label>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
@@ -39,7 +39,7 @@ const Login = () => {
   }
 
   if (loading) { return <div>Loading...!</div> }
-  if (user){ return <Navigate to='/view' /> }
+  if (user) { return <Navigate to='/view' /> }
 
   return (
     <div>

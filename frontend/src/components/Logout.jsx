@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
@@ -40,9 +40,9 @@ const Logout = () => {
             <div className='error'>{error}</div>
             <h2>Hi {user.username} - Are you sure you want to logout?</h2>
             <button onClick={logout}>Logout</button>
-            <button onClick={()=> navigate(-1)}>Go to back</button>
+            <button onClick={() => navigate(-1)}>Go to back</button>
           </>
-        ): (
+        ) : (
           <div>Loading....</div>
         )
       }

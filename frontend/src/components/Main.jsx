@@ -14,7 +14,7 @@ const Main = () => {
 				})
 
 				if (response.status === 200) {
-					setTimeout(() => { 
+					setTimeout(() => {
 						setMessage('Backend connected successfully...!')
 						navigate('/signup')
 					}, 300)

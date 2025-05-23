@@ -50,7 +50,7 @@ const SignUp = () => {
   }
 
   if (loading) { return <div>Loading...!</div> }
-  if (user){ return <Navigate to='/edit-profile' /> }
+  if (user) { return <Navigate to='/edit-profile' /> }
 
   return (
     <div>
