@@ -7,6 +7,7 @@ import SignUp from './components/SignUp'
 import EditProfile from './components/EditProfile'
 import View from './components/View'
 import ChangePassword from './components/ChangePassword'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
 
@@ -14,11 +15,14 @@ function App() {
     <Routes>
       <Route path='/' element={<Main />} />
       <Route path='/login' element={<Login />} />
-      <Route path='/logout' element={<Logout />} />
       <Route path='/signup' element={<SignUp />} />
-      <Route path='/view' element={<View />} />
-      <Route path='/edit-profile' element={<EditProfile />} />
-      <Route path='/change-password' element={<ChangePassword />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route path='/logout' element={<Logout />} />
+        <Route path='/view' element={<View />} />
+        <Route path='/edit-profile' element={<EditProfile />} />
+        <Route path='/change-password' element={<ChangePassword />} />
+      </Route>
     </Routes>
   )
 }
