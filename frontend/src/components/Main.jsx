@@ -7,25 +7,20 @@ const Main = () => {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		const connect = async () => {
-			try {
-				const response = await await fetch(API.health, {
-					method: 'GET'
-				})
-
-				if (response.status === 200) {
-					setTimeout(() => {
-						setMessage('Backend connected successfully...!')
-						navigate('/signup')
-					}, 300)
-				}
+		fetch(API.health, {
+			method: 'GET'
+		})
+		.then(response => {
+			if (response.status === 200) {
+				setTimeout(() => {
+					setMessage('Backend connected successfully...!')
+					navigate('/signup')
+				}, 300)
 			}
-			catch {
-				setTimeout(() => setMessage('Error connecting backend...!'), 300)
-			}
-		}
-
-		connect()
+		})
+		.catch(() => {
+			setMessage('Error connecting backend...!')
+		})
 	}, [])
 
 	return (

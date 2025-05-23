@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, Navigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
@@ -50,7 +50,7 @@ const SignUp = () => {
   }
 
   if (loading) { return <div>Loading...!</div> }
-  if (user) { return <Navigate to='/edit-profile' /> }
+  if (user) { return <Navigate to='/view' /> }
 
   return (
     <div>
