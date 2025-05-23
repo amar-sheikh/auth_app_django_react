@@ -7,7 +7,9 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sessions.models import Session
 from django.conf import settings
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import json
@@ -58,6 +60,17 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return JsonResponse({ 'message': 'User logged out successfully.' }, status=200)
+
+require_http_methods(['POST'])
+def logout_from_all_devices_view(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+
+    for session in list(Session.objects.filter(expire_date__gte=timezone.now())):
+        if session.get_decoded()['_auth_user_id'] == str(request.user.id):
+            session.delete()
+
+    return JsonResponse({ 'message': 'Successfully loggout from all devices' }, status=200)
 
 @require_POST
 def update_user_view(request):

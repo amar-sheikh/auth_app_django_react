@@ -5,6 +5,7 @@ export const API = {
     register: 'http://localhost:8000/auth/register',
     login: 'http://localhost:8000/auth/login',
     logout: 'http://localhost:8000/auth/logout',
+    logout_from_all_devices: 'http://localhost:8000/auth/logout-from-all-devices',
     update: 'http://localhost:8000/auth/update',
     update_password: 'http://localhost:8000/auth/update-password',
     send_password_reset_email: 'http://localhost:8000/auth/send-password-reset-email',
