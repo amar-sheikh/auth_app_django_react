@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { Link, useNavigate, Navigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
-import { useAuth } from '../contexts/AuthContext'
 
 const initialState = {
   first_name: '',
@@ -16,7 +15,6 @@ const initialState = {
 const SignUp = () => {
   const [formData, setFormData] = useState(initialState)
   const [formErrors, setFormErrors] = useState(initialState)
-  const { user, loading } = useAuth()
   const navigate = useNavigate()
 
   const register = async (e) => {
@@ -48,9 +46,6 @@ const SignUp = () => {
       });
     }
   }
-
-  if (loading) { return <div>Loading...!</div> }
-  if (user) { return <Navigate to='/view' /> }
 
   return (
     <div>

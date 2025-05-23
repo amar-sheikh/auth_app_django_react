@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
@@ -11,7 +11,7 @@ const Login = () => {
   })
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  const { user, loading, setLoading } = useAuth()
+  const { setLoading } = useAuth()
 
   const login = async (e) => {
     e.preventDefault();
@@ -37,9 +37,6 @@ const Login = () => {
       setError(data.message)
     }
   }
-
-  if (loading) { return <div>Loading...!</div> }
-  if (user) { return <Navigate to='/view' /> }
 
   return (
     <div>

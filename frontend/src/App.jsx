@@ -10,16 +10,20 @@ import ChangePassword from './components/ChangePassword'
 import ProtectedRoute from './components/ProtectedRoute'
 import ForgetPassword from './components/ForgetPassword'
 import ResetPassword from './components/ResetPassword'
+import NonProtectedRoute from './components/NonProtectedRoute'
+import NotFound from './components/NotFound'
 
 function App() {
 
   return (
     <Routes>
-      <Route path='/' element={<Main />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/signup' element={<SignUp />} />
-      <Route path='/forget-password' element={<ForgetPassword />} />
-      <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
+      <Route element={<NonProtectedRoute />} >
+        <Route path='/' element={<Main />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/forget-password' element={<ForgetPassword />} />
+        <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
+      </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route path='/logout' element={<Logout />} />
@@ -27,6 +31,8 @@ function App() {
         <Route path='/edit-profile' element={<EditProfile />} />
         <Route path='/change-password' element={<ChangePassword />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
