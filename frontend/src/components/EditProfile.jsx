@@ -112,7 +112,7 @@ const EditProfile = () => {
           </div>
           <div className='error'>{formErrors.email}</div>
         </div>
-        <div className='form-item'>
+        <div className='form-submit'>
           <button type='submit'>Update</button>
         </div>
       </form>

@@ -54,7 +54,7 @@ const ForgetPassword = () => {
 							placeholder='Enter username ...' />
 					</div>
 				</div>
-				<div className='form-item'>
+				<div className='form-submit'>
 					<button type='submit'>Send mail</button>
 				</div>
 			</form>

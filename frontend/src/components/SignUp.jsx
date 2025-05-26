@@ -121,7 +121,7 @@ const SignUp = () => {
           </div>
           <div className='error'>{formErrors.password2}</div>
         </div>
-        <div className='form-item'>
+        <div className='form-submit'>
           <button type='submit'>Sign Up</button>
         </div>
       </form>

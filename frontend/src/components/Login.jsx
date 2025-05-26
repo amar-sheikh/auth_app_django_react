@@ -64,7 +64,7 @@ const Login = () => {
               placeholder='Enter password' />
           </div>
         </div>
-        <div className='form-item'>
+        <div className='form-submit'>
           <button type='submit'>Login</button>
         </div>
       </form>

@@ -85,6 +85,11 @@ button:focus-visible {
   font-size: 12px;
 }
 
+.form-submit {
+  margin: 12px;
+  text-align: center;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -94,6 +99,6 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #f3f3f3;
   }
 }
