@@ -92,12 +92,14 @@ def update_password_view(request):
         return JsonResponse({'error': 'User not authenticated.'}, status=401)
 
     data=json.loads(request.body)
+    keep_current_session = data.pop('keep_current_session', False)
     form = PasswordChangeForm(user=request.user, data=data)
 
     if form.is_valid():
         form.save()
-        update_session_auth_hash(request, form.user)
-        return JsonResponse({ 'message': 'Password changed successfully.' }, status=200)
+        if keep_current_session == True:
+            update_session_auth_hash(request, form.user)
+        return JsonResponse({ 'message': 'Password changed successfully' }, status=200)
     else:
         return JsonResponse({'errors': form.errors}, status=400)
 

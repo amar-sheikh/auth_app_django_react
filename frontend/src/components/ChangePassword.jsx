@@ -8,12 +8,13 @@ const initialState = {
 	old_password: '',
 	new_password1: '',
 	new_password2: '',
+	keep_current_session: ''
 }
 
 const ChangePassword = () => {
 	const [formData, setFormData] = useState(initialState)
 	const [formErrors, setFormErrors] = useState(initialState)
-	const { setLoading } = useAuth()
+	const { setUser, setLoading } = useAuth()
 	const navigate = useNavigate()
 
 	const updatePassword = async (e) => {
@@ -33,6 +34,7 @@ const ChangePassword = () => {
 
 		if (response.status === 200) {
 			setLoading(true)
+			setUser(null)
 			navigate('/view')
 		} else {
 			const data = await response.json()
@@ -88,6 +90,19 @@ const ChangePassword = () => {
 							placeholder='Enter confrim password' />
 					</div>
 					<div className='error'>{formErrors.new_password2}</div>
+				</div>
+				<div>
+					<div className='form-item'>
+						<label htmlFor='keep_current_session'>
+							<input
+								name='keep_current_session'
+								type='checkbox'
+								checked={formData.keep_current_session}
+								onChange={(e) => setFormData({ ...formData, keep_current_session: e.target.checked })} />
+							Stay signed in on this browser
+						</label>
+					</div>
+					<div className='error'>{formErrors.keep_current_session}</div>
 				</div>
 				<div className='form-submit'>
 					<button type='submit'>Update</button>
