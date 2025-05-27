@@ -26,8 +26,7 @@ def whoami_view(request):
             'username': user.username,
             'email': user.email,
             'first_name': user.first_name,
-            'last_name': user.last_name,
-            'date_joined': user.date_joined
+            'last_name': user.last_name
         }}, status=200)
     return JsonResponse({'message': 'User is not authenticated.'}, status=401)
 

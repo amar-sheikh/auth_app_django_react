@@ -10,7 +10,6 @@ const initialState = {
   last_name: '',
   username: '',
   email: '',
-  date_joined: ''
 }
 
 const EditProfile = () => {
@@ -62,10 +61,6 @@ const EditProfile = () => {
       <hr />
       <h1>Edit profile</h1>
       <form onSubmit={update} className='form'>
-        <input
-          name='first_name'
-          type='hidden'
-          value={formData.date_joined} />
         <div>
           <div className='form-item'>
             <label htmlFor='first_name'>First name</label>
