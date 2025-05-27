@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -15,22 +15,23 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 @ensure_csrf_cookie
 def csrf_view(request):
-    return JsonResponse({'message': 'CSRF token set successfully'}, status=200)
+    return JsonResponse({'message': 'CSRF token set successfully.'}, status=200)
 
 def whoami_view(request):
-    if request.user.is_authenticated:
-        user = User.objects.get(pk=request.user.id)
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User not authenticated.'}, status=401)
 
-        return JsonResponse({ 'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name
-        }}, status=200)
-    return JsonResponse({'message': 'User is not authenticated.'}, status=401)
+    user = User.objects.get(pk=request.user.id)
 
-require_http_methods(['POST'])
+    return JsonResponse({ 'user': {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name
+    }}, status=200)
+
+@require_POST
 def register_view(request):
     data = json.loads(request.body)
 
@@ -38,44 +39,44 @@ def register_view(request):
 
     if form.is_valid():
         form.save()
-        return JsonResponse({'message': 'User registered successfully'}, status=201)
+        return JsonResponse({'message': 'User registered successfully.'}, status=201)
     else:
         return JsonResponse({'errors': form.errors}, status=400)
 
-require_http_methods(['POST'])
+@require_POST
 def login_view(request):
     data = json.loads(request.body)
     user = authenticate(request, username=data['username'], password=data['password'])
     
     if user:
         login(request, user)
-        return JsonResponse({ 'message': 'User logged in successfully' }, status=200)
+        return JsonResponse({ 'message': 'User logged in successfully.' }, status=200)
     else:
-        return JsonResponse({ 'message': 'Invalid credential: Either User name or password is incorrect' }, status=401)
+        return JsonResponse({ 'message': 'Invalid credential: Either User name or password is incorrect.' }, status=401)
 
-require_http_methods(['POST'])
+@require_POST
 def logout_view(request):
     logout(request)
-    return JsonResponse({ 'message': 'Logged out successfully' }, status=200)
+    return JsonResponse({ 'message': 'User logged out successfully.' }, status=200)
 
-require_http_methods(['POST'])
+@require_POST
 def update_user_view(request):
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'User not authenticated'}, status=401)
+        return JsonResponse({'error': 'User not authenticated.'}, status=401)
     
     data = json.loads(request.body)
     form = CustomUserChangeForm(data, instance=request.user)
 
     if form.is_valid():
         form.save()
-        return JsonResponse({ 'message': 'User updated successfully' }, status=200)
+        return JsonResponse({ 'message': 'User updated successfully.' }, status=200)
     else:
         return JsonResponse({'errors': form.errors}, status=400)
 
-require_http_methods(['POST'])
+@require_POST
 def update_password_view(request):
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'User not authenticated'}, status=401)
+        return JsonResponse({'error': 'User not authenticated.'}, status=401)
     
     data=json.loads(request.body)
     form = PasswordChangeForm(user=request.user, data=data)
@@ -83,11 +84,11 @@ def update_password_view(request):
     if form.is_valid():
         form.save()
         update_session_auth_hash(request, form.user)
-        return JsonResponse({ 'message': 'Password changed successfully' }, status=200)
+        return JsonResponse({ 'message': 'Password changed successfully.' }, status=200)
     else:
         return JsonResponse({'errors': form.errors}, status=400)
 
-require_http_methods(['POST'])
+@require_POST
 def send_reset_password_email(request):
     try:
         data = json.loads(request.body)
@@ -113,11 +114,11 @@ def send_reset_password_email(request):
         msg.attach_alternative(html, "text/html")
         msg.send()
 
-        return JsonResponse({ 'message': 'Mail send successfully successfully' }, status=200)
+        return JsonResponse({ 'message': 'Password reset mail send successfully.' }, status=200)
     except Exception as e:
-        return JsonResponse({ 'error': str(e) }, status=401)
+        return JsonResponse({ 'error': str(e) }, status=400)
 
-require_http_methods(['POST'])
+@require_POST
 def reset_password(request):
     try:
         data = json.loads(request.body)
@@ -129,10 +130,10 @@ def reset_password(request):
 
             if form.is_valid():
                 form.save()
-                return JsonResponse({'message': 'Password reset successfully'}, status=200)
+                return JsonResponse({'message': 'Password reset successfully.'}, status=200)
             else:
-                return JsonResponse({'error': form.errors}, status=400)
+                return JsonResponse({'errors': form.errors}, status=400)
         else:
-            return JsonResponse({'error': 'Invalid or expired token'}, status=400)
+            return JsonResponse({'error': 'Invalid or expired token.'}, status=400)
     except Exception as e:
-        return JsonResponse({ 'error': str(e) }, status=401)
+        return JsonResponse({ 'error': str(e) }, status=400)
