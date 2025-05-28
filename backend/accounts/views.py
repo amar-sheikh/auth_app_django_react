@@ -47,7 +47,7 @@ def register_view(request):
 def login_view(request):
     data = json.loads(request.body)
     user = authenticate(request, username=data['username'], password=data['password'])
-    
+
     if user:
         login(request, user)
         return JsonResponse({ 'message': 'User logged in successfully.' }, status=200)
@@ -63,7 +63,7 @@ def logout_view(request):
 def update_user_view(request):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'User not authenticated.'}, status=401)
-    
+
     data = json.loads(request.body)
     form = CustomUserChangeForm(data, instance=request.user)
 
@@ -77,7 +77,7 @@ def update_user_view(request):
 def update_password_view(request):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'User not authenticated.'}, status=401)
-    
+
     data=json.loads(request.body)
     form = PasswordChangeForm(user=request.user, data=data)
 

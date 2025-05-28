@@ -19,7 +19,7 @@ class TestUser:
     def test_user_creation(self, user):
         user.full_clean()
         assert user.username == 'User1'
-    
+
     def test_user_creation_duplicate_username(self, user):
         with pytest.raises(IntegrityError) as exception_info:
             User.objects.create(
@@ -27,7 +27,7 @@ class TestUser:
                 email='user2@xyz.com',
                 password='password123',
             )
-        
+
         assert str(exception_info.value) == 'UNIQUE constraint failed: auth_user.username'
 
     def test_user_creation_duplicate_email(self, user):
@@ -37,7 +37,7 @@ class TestUser:
                 email='user1@xyz.com',
                 password='password123',
             )
-        
+
         assert str(exception_info.value) == 'UNIQUE constraint failed: auth_user.email'
 
     def test_user_creation_username_having_invalid_character(self, user):
@@ -48,7 +48,7 @@ class TestUser:
                 password='password123',
             )
             user2.full_clean()
-        
+
         assert 'Enter a valid username. This value may contain only letters, numbers, and @/./+/-/_ characters.' in exception_info.value.message_dict['username']
 
     def test_user_creation_without_attributes(self):
