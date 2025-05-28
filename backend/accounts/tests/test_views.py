@@ -33,7 +33,7 @@ def test_csrf_view(client):
     response = client.get(reverse('csrf'))
 
     assert response.status_code == 200
-    assert 'csrftoken' in response.cookies, 'CSRF Token is missing in response'
+    assert 'csrftoken' in response.cookies, 'CSRF Token is missing in respons.'
     assert json.loads(response.content)['message'] == 'CSRF token set successfully.'
 
 @pytest.mark.django_db
@@ -192,6 +192,7 @@ class TestLoginView:
 
         assert response.status_code == 200
         assert json.loads(response.content)['message'] == 'User logged in successfully.'
+        assert 'sessionid' in response.cookies, 'Session id missing in response.'
 
     def test_login_view_with_valid_credentials(self, client, user, form_attributes):
         form_attributes['password'] = 'password123'
@@ -202,11 +203,13 @@ class TestLoginView:
 
         assert response.status_code == 401
         assert json.loads(response.content)['message'] == 'Invalid credential: Either User name or password is incorrect.'
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_login_view_with_get_request(self, client):
         response = client.get(reverse('login'))
 
         assert response.status_code == 405
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
 @pytest.mark.django_db
 class TestLogoutView:
@@ -343,12 +346,13 @@ class TestUpdatePasswordView:
         user.refresh_from_db()
         new_password_hash = user.password
         assert new_password_hash != old_password_hash
-        assert 'sessionid' in response.cookies, 'Session id missing in response'
+        assert 'sessionid' in response.cookies, 'Session id missing in response.'
 
     def test_update_password_view_with_get_request(self, logged_in_client):
         response = logged_in_client.get(reverse('update-password'))
 
         assert response.status_code == 405
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_update_password_view_without_attrbites(self, logged_in_client):
         response = logged_in_client.post(reverse('update-password'),
@@ -361,6 +365,7 @@ class TestUpdatePasswordView:
         assert 'This field is required.' in errors['old_password']
         assert 'This field is required.' in errors['new_password1']
         assert 'This field is required.' in errors['new_password2']
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_update_password_view_without_logged_in_user(self, client, form_attributes):
         response = client.post(reverse('update-password'),
@@ -370,6 +375,7 @@ class TestUpdatePasswordView:
 
         assert response.status_code == 401
         assert json.loads(response.content)['error'] == 'User not authenticated.'
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_update_password_view_with_invalid_old_password(self, logged_in_client, form_attributes):
         form_attributes['old_password'] = 'Invalid'
@@ -381,6 +387,7 @@ class TestUpdatePasswordView:
 
         assert response.status_code == 400
         assert 'Your old password was entered incorrectly. Please enter it again.' in json.loads(response.content)['errors']['old_password']
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_register_view_with_shorter_password(self, logged_in_client, form_attributes):
         form_attributes['new_password1'] = "123"
@@ -393,6 +400,7 @@ class TestUpdatePasswordView:
 
         assert response.status_code == 400
         assert 'This password is too short. It must contain at least 8 characters.' in json.loads(response.content)['errors']['new_password2']
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_register_view_with_common_password(self, logged_in_client, form_attributes):
         form_attributes['new_password1'] = "password123"
@@ -405,6 +413,7 @@ class TestUpdatePasswordView:
 
         assert response.status_code == 400
         assert 'This password is too common.' in json.loads(response.content)['errors']['new_password2']
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_register_view_with_only_numeric_password(self, logged_in_client, form_attributes):
         form_attributes['new_password1'] = "12345678"
@@ -417,6 +426,7 @@ class TestUpdatePasswordView:
 
         assert response.status_code == 400
         assert 'This password is entirely numeric.' in json.loads(response.content)['errors']['new_password2']
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_update_password_view_with_different_new_passwords(self, logged_in_client, form_attributes):
         form_attributes['new_password1'] = 'Notsame'
@@ -428,6 +438,7 @@ class TestUpdatePasswordView:
 
         assert response.status_code == 400
         assert 'The two password fields didn’t match.' in json.loads(response.content)['errors']['new_password2']
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
 @pytest.mark.django_db
 class TestSendResetPasswordEmailView:
