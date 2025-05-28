@@ -33,7 +33,7 @@ def test_csrf_view(client):
     response = client.get(reverse('csrf'))
 
     assert response.status_code == 200
-    assert 'csrftoken' in response.cookies, 'CSRF Token is missing in respons.'
+    assert 'csrftoken' in response.cookies, 'CSRF Token is missing in response.'
     assert json.loads(response.content)['message'] == 'CSRF token set successfully.'
 
 @pytest.mark.django_db
@@ -232,6 +232,36 @@ class TestLogoutView:
         assert response.status_code == 405
 
 @pytest.mark.django_db
+class TestLogoutOfAllDevicesView:
+
+    def test_logout_from_all_devices_view_with_user_logged_in(self, user):
+        client1 = Client()
+        client2 = Client()
+        client1.login(username='user1', password='Password#123')
+        client2.login(username='user1', password='Password#123')
+
+        assert client1.session.get('_auth_user_id') == str(user.id)
+        assert client2.session.get('_auth_user_id') == str(user.id)
+
+        response = client1.post(reverse('logout-from-all-devices'))
+
+        assert response.status_code == 200
+        assert json.loads(response.content)['message'] == 'Successfully loggout from all devices.'
+        assert client1.session.get('_auth_user_id') is None
+        assert client2.session.get('_auth_user_id') is None
+
+    def test_logout_from_all_devices_view_with_get_request(self, logged_in_client):
+        response = logged_in_client.get(reverse('logout-from-all-devices'))
+
+        assert response.status_code == 405
+
+    def test_logout_from_all_devices_user_view_without_logged_in_user(self, client):
+        response = client.post(reverse('logout-from-all-devices'))
+
+        assert response.status_code == 401
+        assert json.loads(response.content)['error'] == 'User not authenticated.'
+
+@pytest.mark.django_db
 class TestUpdateUserView:
 
     @pytest.fixture
@@ -331,11 +361,13 @@ class TestUpdatePasswordView:
         return {
             'old_password': 'Password#123',
             'new_password1': 'new_password123',
-            'new_password2': 'new_password123'
+            'new_password2': 'new_password123',
+            'keep_current_session': True
         }
 
     def test_update_password_view(self, logged_in_client, user, form_attributes):
         old_password_hash = user.password
+
         response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
@@ -347,6 +379,22 @@ class TestUpdatePasswordView:
         new_password_hash = user.password
         assert new_password_hash != old_password_hash
         assert 'sessionid' in response.cookies, 'Session id missing in response.'
+
+    def test_update_password_view_without_keeping_current_session(self, logged_in_client, user, form_attributes):
+        form_attributes['keep_current_session'] = False
+        old_password_hash = user.password
+
+        response = logged_in_client.post(reverse('update-password'),
+            data=json.dumps(form_attributes),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        assert json.loads(response.content)['message'] == 'Password changed successfully.'
+        user.refresh_from_db()
+        new_password_hash = user.password
+        assert new_password_hash != old_password_hash
+        assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_update_password_view_with_get_request(self, logged_in_client):
         response = logged_in_client.get(reverse('update-password'))
