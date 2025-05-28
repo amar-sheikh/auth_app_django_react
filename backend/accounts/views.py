@@ -61,16 +61,16 @@ def logout_view(request):
     logout(request)
     return JsonResponse({ 'message': 'User logged out successfully.' }, status=200)
 
-require_http_methods(['POST'])
+@require_POST
 def logout_from_all_devices_view(request):
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'User not authenticated'}, status=401)
+        return JsonResponse({'error': 'User not authenticated.'}, status=401)
 
     for session in list(Session.objects.filter(expire_date__gte=timezone.now())):
         if session.get_decoded()['_auth_user_id'] == str(request.user.id):
             session.delete()
 
-    return JsonResponse({ 'message': 'Successfully loggout from all devices' }, status=200)
+    return JsonResponse({ 'message': 'Successfully loggout from all devices.' }, status=200)
 
 @require_POST
 def update_user_view(request):
@@ -99,7 +99,7 @@ def update_password_view(request):
         form.save()
         if keep_current_session == True:
             update_session_auth_hash(request, form.user)
-        return JsonResponse({ 'message': 'Password changed successfully' }, status=200)
+        return JsonResponse({ 'message': 'Password changed successfully.' }, status=200)
     else:
         return JsonResponse({'errors': form.errors}, status=400)
 
