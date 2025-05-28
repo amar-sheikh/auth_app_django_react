@@ -1,10 +1,11 @@
 import pytest
-from django.test import Client
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 from django.core import mail
+from django.test import Client
+from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
 import json
 import time
 
@@ -29,7 +30,7 @@ def logged_in_client(user):
     return client
 
 def test_csrf_view(client):
-    response = client.get('/auth/csrf')
+    response = client.get(reverse('csrf'))
 
     assert response.status_code == 200
     assert 'csrftoken' in response.cookies, 'CSRF Token is missing in response'
@@ -38,14 +39,14 @@ def test_csrf_view(client):
 @pytest.mark.django_db
 class TestWhoAmIView:
     def test_whoami_view_with_user_logged_in(self, logged_in_client, user):
-        response = logged_in_client.get('/auth/whoami')
+        response = logged_in_client.get(reverse('whoami'))
 
         assert response.status_code == 200
         assert json.loads(response.content)['user']['id'] == user.id
         assert json.loads(response.content)['user']['username'] == 'user1'
 
     def test_whoami_view_with_user_logged_in(self, client):
-        response = client.get('/auth/whoami')
+        response = client.get(reverse('whoami'))
 
         assert response.status_code == 401
         assert json.loads(response.content)['error'] == 'User not authenticated.'
@@ -65,7 +66,7 @@ class TestRegisterView:
         }
 
     def test_register_view(self, client, form_attributes):
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -74,12 +75,12 @@ class TestRegisterView:
         assert json.loads(response.content)['message'] == 'User registered successfully.'
 
     def test_register_view_with_get_request(self, client):
-        response = client.get('/auth/register')
+        response = client.get(reverse('register'))
 
         assert response.status_code == 405
 
     def test_register_view_with_username_already_exists(self, client, user, form_attributes):
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -91,7 +92,7 @@ class TestRegisterView:
         form_attributes['username'] = 'user2'
         form_attributes['email'] = 'user1@xyz.com'
 
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -100,7 +101,7 @@ class TestRegisterView:
         assert 'User with this Email address already exists.' in json.loads(response.content)['errors']['email']
 
     def test_register_view_without_attributes(self, client):
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps({}),
             content_type='application/json'
         )
@@ -117,7 +118,7 @@ class TestRegisterView:
     def test_register_view_with_username_having_invalid_character(self, client, form_attributes):
         form_attributes['username'] = 'User 1'
 
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -129,7 +130,7 @@ class TestRegisterView:
         form_attributes['password1'] = "123"
         form_attributes['password2'] = "123"
 
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -141,7 +142,7 @@ class TestRegisterView:
         form_attributes['password1'] = "password123"
         form_attributes['password2'] = "password123"
 
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -153,7 +154,7 @@ class TestRegisterView:
         form_attributes['password1'] = "12345678"
         form_attributes['password2'] = "12345678"
 
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -165,7 +166,7 @@ class TestRegisterView:
         form_attributes['password1'] = "password123"
         form_attributes['password2'] = "password456"
 
-        response = client.post('/auth/register',
+        response = client.post(reverse('register'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -184,7 +185,7 @@ class TestLoginView:
         }
 
     def test_login_view_with_valid_credentials(self, client, user, form_attributes):
-        response = client.post('/auth/login',
+        response = client.post(reverse('login'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -194,7 +195,7 @@ class TestLoginView:
 
     def test_login_view_with_valid_credentials(self, client, user, form_attributes):
         form_attributes['password'] = 'password123'
-        response = client.post('/auth/login',
+        response = client.post(reverse('login'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -203,7 +204,7 @@ class TestLoginView:
         assert json.loads(response.content)['message'] == 'Invalid credential: Either User name or password is incorrect.'
 
     def test_login_view_with_get_request(self, client):
-        response = client.get('/auth/login')
+        response = client.get(reverse('login'))
 
         assert response.status_code == 405
 
@@ -211,19 +212,19 @@ class TestLoginView:
 class TestLogoutView:
 
     def test_logout_view_without_user_logged_in(self, client):
-        response = client.post('/auth/logout')
+        response = client.post(reverse('logout'))
 
         assert response.status_code == 200
         assert json.loads(response.content)['message'] == 'User logged out successfully.'
 
     def test_logout_view_with_user_logged_in(self, logged_in_client):
-        response = logged_in_client.post('/auth/logout')
+        response = logged_in_client.post(reverse('logout'))
 
         assert response.status_code == 200
         assert json.loads(response.content)['message'] == 'User logged out successfully.'
 
     def test_logout_view_with_get_request(self, client):
-        response = client.get('/auth/logout')
+        response = client.get(reverse('logout'))
 
         assert response.status_code == 405
 
@@ -246,7 +247,7 @@ class TestUpdateUserView:
         assert user.first_name == 'abc'
         assert user.last_name == '123'
 
-        response = logged_in_client.post('/auth/update',
+        response = logged_in_client.post(reverse('update'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -260,12 +261,12 @@ class TestUpdateUserView:
         assert user.last_name == '456'
 
     def test_update_user_view_with_get_request(self, logged_in_client):
-        response = logged_in_client.get('/auth/update')
+        response = logged_in_client.get(reverse('update'))
 
         assert response.status_code == 405
 
     def test_update_user_view_without_logged_in_user(self, client, form_attributes):
-        response = client.post('/auth/update',
+        response = client.post(reverse('update'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -276,7 +277,7 @@ class TestUpdateUserView:
     def test_update_user_view_with_username_already_exists(self, logged_in_client, form_attributes):
         user1 = User.objects.create_user(username='user2')
 
-        response = logged_in_client.post('/auth/update',
+        response = logged_in_client.post(reverse('update'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -287,7 +288,7 @@ class TestUpdateUserView:
     def test_update_user_view_with_email_already_exists(self, logged_in_client, form_attributes):
         user1 = User.objects.create_user(username='user3', email='user2@xyz.com')
 
-        response = logged_in_client.post('/auth/update',
+        response = logged_in_client.post(reverse('update'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -296,7 +297,7 @@ class TestUpdateUserView:
         assert 'User with this Email address already exists.' in json.loads(response.content)['errors']['email']
 
     def test_update_user_view_without_attributes(self, logged_in_client):
-        response = logged_in_client.post('/auth/update',
+        response = logged_in_client.post(reverse('update'),
             data=json.dumps({}),
             content_type='application/json'
         )
@@ -311,7 +312,7 @@ class TestUpdateUserView:
     def test_update_user_view_with_username_having_invalid_character(self, logged_in_client, form_attributes):
         form_attributes['username'] = 'User 1'
 
-        response = logged_in_client.post('/auth/update',
+        response = logged_in_client.post(reverse('update'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -332,7 +333,7 @@ class TestUpdatePasswordView:
 
     def test_update_password_view(self, logged_in_client, user, form_attributes):
         old_password_hash = user.password
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -345,12 +346,12 @@ class TestUpdatePasswordView:
         assert 'sessionid' in response.cookies, 'Session id missing in response'
 
     def test_update_password_view_with_get_request(self, logged_in_client):
-        response = logged_in_client.get('/auth/update-password')
+        response = logged_in_client.get(reverse('update-password'))
 
         assert response.status_code == 405
 
     def test_update_password_view_without_attrbites(self, logged_in_client):
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps({}),
             content_type='application/json'
         )
@@ -362,7 +363,7 @@ class TestUpdatePasswordView:
         assert 'This field is required.' in errors['new_password2']
 
     def test_update_password_view_without_logged_in_user(self, client, form_attributes):
-        response = client.post('/auth/update-password',
+        response = client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -373,7 +374,7 @@ class TestUpdatePasswordView:
     def test_update_password_view_with_invalid_old_password(self, logged_in_client, form_attributes):
         form_attributes['old_password'] = 'Invalid'
 
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -385,7 +386,7 @@ class TestUpdatePasswordView:
         form_attributes['new_password1'] = "123"
         form_attributes['new_password2'] = "123"
 
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -397,7 +398,7 @@ class TestUpdatePasswordView:
         form_attributes['new_password1'] = "password123"
         form_attributes['new_password2'] = "password123"
 
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -409,7 +410,7 @@ class TestUpdatePasswordView:
         form_attributes['new_password1'] = "12345678"
         form_attributes['new_password2'] = "12345678"
 
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -420,7 +421,7 @@ class TestUpdatePasswordView:
     def test_update_password_view_with_different_new_passwords(self, logged_in_client, form_attributes):
         form_attributes['new_password1'] = 'Notsame'
 
-        response = logged_in_client.post('/auth/update-password',
+        response = logged_in_client.post(reverse('update-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -441,7 +442,7 @@ class TestSendResetPasswordEmailView:
     def test_send_reset_password_email_view(self, client, user, form_attributes):
         assert len(mail.outbox) == 0
 
-        response = client.post('/auth/send-password-reset-email',
+        response = client.post(reverse('send-password-reset-email'),
             data=json.dumps(form_attributes),
             content_type='application/json',
             headers={
@@ -459,7 +460,7 @@ class TestSendResetPasswordEmailView:
     def test_send_reset_password_email_view_with_get_request(self, client):
         assert len(mail.outbox) == 0
 
-        response = client.get('/auth/send-password-reset-email')
+        response = client.get(reverse('send-password-reset-email'))
 
         assert response.status_code == 405
         assert len(mail.outbox) == 0
@@ -469,7 +470,7 @@ class TestSendResetPasswordEmailView:
 
         assert len(mail.outbox) == 0
 
-        response = client.post('/auth/send-password-reset-email',
+        response = client.post(reverse('send-password-reset-email'),
             data=json.dumps(form_attributes),
             content_type='application/json',
             headers={
@@ -486,7 +487,7 @@ class TestSendResetPasswordEmailView:
 
         assert len(mail.outbox) == 0
  
-        response = client.post('/auth/send-password-reset-email',
+        response = client.post(reverse('send-password-reset-email'),
             data=json.dumps(form_attributes),
             content_type='application/json',
             headers={
@@ -503,7 +504,7 @@ class TestSendResetPasswordEmailView:
 
         assert len(mail.outbox) == 0
 
-        response = client.post('/auth/send-password-reset-email',
+        response = client.post(reverse('send-password-reset-email'),
             data=json.dumps(form_attributes),
             content_type='application/json',
             headers={
@@ -535,7 +536,7 @@ class TestResetPasswordView:
     def test_reset_password_view(self, client, user, form_attributes):
         old_password_hash = user.password
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json',
         )
@@ -547,14 +548,14 @@ class TestResetPasswordView:
         assert new_password_hash != old_password_hash
 
     def test_reset_password_view_with_get_request(self, client):
-        response = client.get('/auth/reset-password')
+        response = client.get(reverse('reset-password'))
 
         assert response.status_code == 405
 
     def test_reset_password_view_invalid_uid(self, client, user, form_attributes):
         form_attributes['uid'] = urlsafe_base64_encode(force_bytes(user.id + 2))
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json',
         )
@@ -565,7 +566,7 @@ class TestResetPasswordView:
     def test_reset_password_view_invalid_token(self, client, user, form_attributes):
         form_attributes['token'] = 'Invalid token'
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json',
         )
@@ -576,7 +577,7 @@ class TestResetPasswordView:
     def test_reset_password_view_expired_token(self, client, user, token_expiry_2_seconds, form_attributes):
         time.sleep(3)
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json',
         )
@@ -588,7 +589,7 @@ class TestResetPasswordView:
         form_attributes['new_password1'] = "123"
         form_attributes['new_password2'] = "123"
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -600,7 +601,7 @@ class TestResetPasswordView:
         form_attributes['new_password1'] = "password123"
         form_attributes['new_password2'] = "password123"
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -612,7 +613,7 @@ class TestResetPasswordView:
         form_attributes['new_password1'] = "12345678"
         form_attributes['new_password2'] = "12345678"
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json'
         )
@@ -623,7 +624,7 @@ class TestResetPasswordView:
     def test_reset_password_view_with_different_password_fields(self, client, user, form_attributes):
         form_attributes['new_password2'] = 'NotSame'
 
-        response = client.post('/auth/reset-password',
+        response = client.post(reverse('reset-password'),
             data=json.dumps(form_attributes),
             content_type='application/json',
         )
