@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from .transaction import Transaction
 
@@ -16,3 +17,11 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.line1}, {self.line2}'
+
+    def clean(self):
+        if self.pk and self.transaction:
+            raise ValidationError('Address is not editable once linked to a transaction.')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
