@@ -202,7 +202,7 @@ class TestLoginView:
         )
 
         assert response.status_code == 401
-        assert json.loads(response.content)['message'] == 'Invalid credential: Either User name or password is incorrect.'
+        assert json.loads(response.content)['error'] == 'Invalid credential: Either User name or password is incorrect.'
         assert 'sessionid' not in response.cookies, 'Session id present in response.'
 
     def test_login_view_with_get_request(self, client):

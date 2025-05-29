@@ -34,7 +34,7 @@ const Login = () => {
     }
     else {
       const data = await response.json()
-      setError(data.message)
+      setError(data.error)
     }
   }
 

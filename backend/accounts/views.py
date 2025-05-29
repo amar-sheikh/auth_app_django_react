@@ -52,7 +52,7 @@ def login_view(request):
         login(request, user)
         return JsonResponse({ 'message': 'User logged in successfully.' }, status=200)
     else:
-        return JsonResponse({ 'message': 'Invalid credential: Either User name or password is incorrect.' }, status=401)
+        return JsonResponse({ 'error': 'Invalid credential: Either User name or password is incorrect.' }, status=401)
 
 @require_POST
 def logout_view(request):

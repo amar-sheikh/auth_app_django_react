@@ -27,12 +27,11 @@ const ForgetPassword = () => {
 			}),
 			credentials: 'include'
 		})
-
 		if (response.status === 200) {
 			setSuccess(true)
 		} else {
 			const data = await response.json()
-			setError(data.message)
+			setError(data.error)
 		}
 	}
 

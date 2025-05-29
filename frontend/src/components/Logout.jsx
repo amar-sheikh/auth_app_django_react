@@ -27,8 +27,7 @@ const Logout = () => {
       navigate('/login')
     }
     else {
-      const data = await response.json()
-      setError(data.message)
+      setError('Something went wrong while logging out...!')
     }
   }
 
