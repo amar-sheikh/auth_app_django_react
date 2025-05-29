@@ -12,13 +12,13 @@ import ForgetPassword from './components/ForgetPassword'
 import ResetPassword from './components/ResetPassword'
 import NonProtectedRoute from './components/NonProtectedRoute'
 import NotFound from './components/NotFound'
+import ConnectBackend from './components/ConnectBackend'
 
 function App() {
 
   return (
     <Routes>
       <Route element={<NonProtectedRoute />} >
-        <Route path='/' element={<Main />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/forget-password' element={<ForgetPassword />} />
@@ -26,6 +26,7 @@ function App() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
+        <Route path='/' element={<Main />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/view' element={<View />} />
         <Route path='/edit-profile' element={<EditProfile />} />

@@ -35,7 +35,7 @@ const ChangePassword = () => {
 		if (response.status === 200) {
 			setLoading(true)
 			setUser(null)
-			navigate('/view')
+			navigate('/')
 		} else {
 			const data = await response.json()
 

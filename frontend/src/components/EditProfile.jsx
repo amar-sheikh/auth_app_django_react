@@ -41,7 +41,7 @@ const EditProfile = () => {
 
     if (response.status === 200) {
       setLoading(true)
-      navigate('/view')
+      navigate('/')
     } else {
       const data = await response.json()
 
