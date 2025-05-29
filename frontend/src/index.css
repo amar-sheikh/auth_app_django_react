@@ -54,6 +54,42 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.form {
+  display: flex;
+  flex-direction: column
+}
+
+.form-item {
+  display: flex;
+  margin: 5px 10px;
+}
+
+.form-item > label {
+  min-width: 160px;
+  margin-right: 20px;
+  text-align: left;
+}
+
+.form-item > input {
+  min-width: 400px;
+}
+
+.form-item > span {
+  margin-left: 20px;
+  color: blue;
+  font-size: 12px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.form-submit {
+  margin: 12px;
+  text-align: center;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -63,6 +99,6 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #f3f3f3;
   }
 }
