@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
+from .transaction import Transaction
 
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
+    transaction = models.OneToOneField(Transaction, on_delete=models.PROTECT, null=True, blank=True)
 
     line1 = models.CharField(max_length=255)
     line2 = models.CharField(max_length=255, blank=True)

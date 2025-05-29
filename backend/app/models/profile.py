@@ -4,7 +4,7 @@ from .address import Address
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    current_address = models.OneToOneField(Address, on_delete=models.SET_NULL, null=True, blank=True, related_name='current_address')
+    current_address = models.OneToOneField(Address, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
