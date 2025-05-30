@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 
 class Transaction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='transactions')
 
     idempotency_key = models.UUIDField(unique=True)
     amount = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])

@@ -1,9 +1,9 @@
 from app.models import Address, Transaction
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 class AddressSerializer(ModelSerializer):
-    user_id = PrimaryKeyRelatedField(queryset=User.objects.all())
+    user_id = PrimaryKeyRelatedField(queryset=get_user_model().objects.all())
     transaction_id = PrimaryKeyRelatedField(queryset=Transaction.objects.all())
 
     class Meta:
