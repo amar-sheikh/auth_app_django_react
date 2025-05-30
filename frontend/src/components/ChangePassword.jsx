@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
 	old_password: '',
@@ -35,7 +36,7 @@ const ChangePassword = () => {
 		if (response.status === 200) {
 			setLoading(true)
 			setUser(null)
-			navigate('/view')
+			navigate('/')
 		} else {
 			const data = await response.json()
 
@@ -50,9 +51,6 @@ const ChangePassword = () => {
 
 	return (
 		<div>
-			<hr />
-			<button onClick={() => navigate(-1)}>Go to back</button>
-			<hr />
 			<h1>Change password</h1>
 			<form onSubmit={updatePassword} className='form'>
 				<div>
@@ -105,7 +103,7 @@ const ChangePassword = () => {
 					<div className='error'>{formErrors.keep_current_session}</div>
 				</div>
 				<div className='form-submit'>
-					<button type='submit'>Update</button>
+					<Button type='submit'>Update</Button>
 				</div>
 			</form>
 		</div>

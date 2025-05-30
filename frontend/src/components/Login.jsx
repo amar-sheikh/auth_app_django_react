@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import ConnectBackend from './ConnectBackend'
+import { Button } from 'react-bootstrap'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -30,7 +32,7 @@ const Login = () => {
 
     if (response.status === 200) {
       setLoading(true)
-      navigate('/view')
+      navigate('/')
     }
     else {
       const data = await response.json()
@@ -40,6 +42,7 @@ const Login = () => {
 
   return (
     <div>
+      <ConnectBackend />
       <h1>Login your account</h1>
       <form onSubmit={login} className='form'>
         <div className='error'>{error}</div>
@@ -65,7 +68,7 @@ const Login = () => {
           </div>
         </div>
         <div className='form-submit'>
-          <button type='submit'>Login</button>
+          <Button type='submit'>Login</Button>
         </div>
       </form>
       <div><Link to='/forget-password' >Forget password?</Link></div>

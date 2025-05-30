@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
+import { Button } from 'react-bootstrap'
 
 const ForgetPassword = () => {
 	const [username, setUsername] = useState('')
@@ -37,8 +38,7 @@ const ForgetPassword = () => {
 
 	return (
 		<div>
-			<hr />
-			<button onClick={() => navigate(-1)}>Go to back</button>
+			<Button onClick={() => navigate(-1)}>Go to back</Button>
 			<hr />
 			<h1>Forget password</h1>
 			<form onSubmit={sendResetPasswordMail} className='form'>
@@ -54,7 +54,7 @@ const ForgetPassword = () => {
 					</div>
 				</div>
 				<div className='form-submit'>
-					<button type='submit'>Send mail</button>
+					<Button type='submit'>Send mail</Button>
 				</div>
 			</form>
 			{success && <div>The password reset email send to you mail. You can reset your password now.</div>}
