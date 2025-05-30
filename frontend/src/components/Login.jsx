@@ -4,6 +4,7 @@ import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
 import ConnectBackend from './ConnectBackend'
+import { Button } from 'react-bootstrap'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -67,7 +68,7 @@ const Login = () => {
           </div>
         </div>
         <div className='form-submit'>
-          <button type='submit'>Login</button>
+          <Button type='submit'>Login</Button>
         </div>
       </form>
       <div><Link to='/forget-password' >Forget password?</Link></div>

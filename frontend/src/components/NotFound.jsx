@@ -1,3 +1,4 @@
+import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 
 const NotFound = () => {
@@ -5,7 +6,7 @@ const NotFound = () => {
 	return (
 		<div>
 			<h1>Page not found</h1>
-			<button onClick={() => navigate(-1)}>Go to back</button>
+			<Button onClick={() => navigate(-1)}>Go to back</Button>
 		</div>
 	)
 }

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
 	uid: '',
@@ -58,8 +59,7 @@ const ResetPassword = () => {
 
 	return (
 		<div>
-			<hr />
-			<button onClick={() => navigate(-1)}>Go to back</button>
+			<Button onClick={() => navigate(-1)}>Go to back</Button>
 			<hr />
 			<h1>Reset password</h1>
 			<form onSubmit={resetPassword} className='form'>
@@ -96,7 +96,7 @@ const ResetPassword = () => {
 					<div className='error'>{formErrors.new_password2}</div>
 				</div>
 				<div className='form-submit'>
-					<button type='submit'>Set Password</button>
+					<Button type='submit'>Set Password</Button>
 				</div>
 			</form>
 		</div>

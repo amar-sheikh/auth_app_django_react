@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
   first_name: '',
@@ -122,7 +123,7 @@ const SignUp = () => {
           <div className='error'>{formErrors.password2}</div>
         </div>
         <div className='form-submit'>
-          <button type='submit'>Sign Up</button>
+          <Button type='submit'>Sign Up</Button>
         </div>
       </form>
       <div>

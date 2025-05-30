@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
   id: '',
@@ -56,9 +57,6 @@ const EditProfile = () => {
 
   return (
     <div>
-      <hr />
-      <button onClick={() => navigate(-1)}>Go to back</button>
-      <hr />
       <h1>Edit profile</h1>
       <form onSubmit={update} className='form'>
         <div>
@@ -108,7 +106,7 @@ const EditProfile = () => {
           <div className='error'>{formErrors.email}</div>
         </div>
         <div className='form-submit'>
-          <button type='submit'>Update</button>
+          <Button type='submit'>Update</Button>
         </div>
       </form>
     </div>
