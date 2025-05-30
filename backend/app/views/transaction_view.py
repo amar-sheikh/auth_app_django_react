@@ -10,6 +10,14 @@ class TransactionViewSet(ModelViewSet):
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
 
-    @action(detail=False, methods=['get'])
-    def count(self, request):
-        return Response({ 'count': self.get_queryset().count() })
+    @action(detail=False, methods=['GET'])
+    def without_address(self, request):
+        queryset = self.get_queryset().filter(address=None)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
