@@ -10,6 +10,8 @@ import ForgetPassword from './components/ForgetPassword'
 import ResetPassword from './components/ResetPassword'
 import NonProtectedRoute from './components/NonProtectedRoute'
 import NotFound from './components/NotFound'
+import Addresses from './components/Addresses'
+import Transactions from './components/Transactions'
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route path='/' element={<Main />} />
+        <Route path='/addresses' element={<Addresses />} />
+        <Route path='/transactions' element={<Transactions />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/edit-profile' element={<EditProfile />} />
         <Route path='/change-password' element={<ChangePassword />} />

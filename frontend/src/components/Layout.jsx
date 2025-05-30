@@ -19,6 +19,8 @@ const Layout = ({ children }) => {
 
 	const links = [
 		{ url: '/', name: 'Dashboard' },
+		{ url: '/addresses', name: 'Addresses' },
+		{ url: '/transactions', name: 'Transactions' },
 	]
 
 	return (
