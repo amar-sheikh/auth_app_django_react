@@ -3,13 +3,13 @@ from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 class TransactionSerializer(ModelSerializer):
-    user_id = PrimaryKeyRelatedField(queryset=get_user_model().objects.all())
+    user = PrimaryKeyRelatedField(queryset=get_user_model().objects.all())
 
     class Meta:
         model = Transaction
         fields = [
             'id',
-            'user_id',
+            'user',
             'idempotency_key',
             'amount',
             'additional_info',
