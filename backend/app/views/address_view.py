@@ -13,8 +13,8 @@ class AddressViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def current_address(self, request):
-        if request.user.current_address and not request.user.current_address.transactions.exists():
-            return Response({ 'current_address': self.get_serializer(request.user.current_address).data })
+        if request.user.current_address:
+            return Response({ 'current_address':  self.get_serializer(request.user.current_address).data})
         return Response({ 'current_address': None })
 
     def create(self, request, *args, **kwargs):

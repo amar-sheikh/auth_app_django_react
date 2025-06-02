@@ -39,7 +39,13 @@ const Main = () => {
 				<div className='mb-3'>Updated at: <strong>{address?.updated_at}</strong></div>
 				<div className='mb-3'>Created at: <strong>{address?.created_at}</strong></div>
 			</div>
-			<AddressFormModal address={address} onSuccess={getAddress} />
+			{
+				address?.have_transactions ? (
+					<AddressFormModal onSuccess={getAddress} />
+				) : (
+					<AddressFormModal address={address} onSuccess={getAddress} />
+				)
+			}
 		</>
 	)
 }
