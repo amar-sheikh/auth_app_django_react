@@ -5,7 +5,6 @@ import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
 
 const initialState = {
-	user: '',
 	idempotency_key: '',
 	amount: '',
 	additional_info: ''
@@ -17,15 +16,11 @@ const TransactionFormModal = ({ onSuccess }) => {
 	const { user } = useAuth()
 
 	useEffect(() => {
-		setFormData({
-			user: user.id,
-			idempotency_key: '',
-			amount: '',
-			additional_info: ''
-		})
+		setFormData(initialState)
 	}, [])
 
 	const onSubmit = async () => {
+		const formDataWithUser = { ...formData, user: user.id };
 		setFormErrors(initialState)
 
 		const response = await fetch(`${API.transactions}/`, {
@@ -34,7 +29,7 @@ const TransactionFormModal = ({ onSuccess }) => {
 				'Content-Type': 'application/json',
 				'X-CSRFToken': getCookie('csrftoken'),
 			},
-			body: JSON.stringify(formData),
+			body: JSON.stringify(formDataWithUser),
 			credentials: 'include'
 		})
 

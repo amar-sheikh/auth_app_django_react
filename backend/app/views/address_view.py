@@ -13,21 +13,18 @@ class AddressViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def current_address(self, request):
-        if request.user.current_address:
+        if request.user.current_address and not request.user.current_address.transactions.exists():
             return Response({ 'current_address': self.get_serializer(request.user.current_address).data })
-        else:
-            return Response({ 'current_address': None })
+        return Response({ 'current_address': None })
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
 
-        if instance.transaction is None:
-            instance.transaction = Transaction.objects.filter(address=None).first()
-            instance.save()
+        Transaction.objects.filter(address=None).update(address=instance)
 
-        if instance.transaction is None and request.user.current_address is None:
+        if not instance.transactions.exists() and (not request.user.current_address or request.user.current_address.transactions.exists()):
             request.user.current_address = instance
             request.user.save()
 

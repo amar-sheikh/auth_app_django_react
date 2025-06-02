@@ -40,9 +40,10 @@ const Transactions = () => {
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>idempotency_key</th>
-								<th>amount</th>
-								<th>additional_info</th>
+								<th>Address ID</th>
+								<th>Idempotency Key</th>
+								<th>Amount</th>
+								<th>Additional Information</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -50,6 +51,7 @@ const Transactions = () => {
 								transactions.results.map((transaction) => (
 									<tr key={transaction.id}>
 										<td>{transaction.id}</td>
+										<td>{transaction.address}</td>
 										<td>{transaction.idempotency_key}</td>
 										<td>{transaction.amount}</td>
 										<td>{transaction.additional_info ?? ''}</td>

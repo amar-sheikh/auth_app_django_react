@@ -1,4 +1,4 @@
-from app.models import Transaction, Address
+from app.models import Transaction
 from app.serializers import TransactionSerializer
 from rest_framework import status
 from rest_framework.decorators import action
@@ -26,16 +26,11 @@ class TransactionViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance = self.perform_create(serializer)
+        instance = serializer.save()
 
-        current_address = request.user.current_address
-
-        if current_address:
-            current_address.transaction = instance
-            current_address.save(update_fields=['transaction'])
-
-            request.user.current_address = None
-            request.user.save(update_fields=['current_address'])
+        if request.user.current_address:
+            instance.address = request.user.current_address
+            instance.save(update_fields=['address'])
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

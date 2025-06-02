@@ -73,7 +73,7 @@ const AddressFormModal = ({ onSuccess, address = null }) => {
 	}
 
 	return (
-		<FormModel edit={!!address} title='address' onSubmit={onSubmit}>
+		<FormModel edit={true} title='address' onSubmit={onSubmit}>
 			<>
 				<div>
 					<div className='form-item'>
