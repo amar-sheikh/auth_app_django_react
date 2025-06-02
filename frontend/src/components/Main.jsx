@@ -31,7 +31,18 @@ const Main = () => {
 			{error && <Alert variant='danger'>{error} </Alert>}
 			{
 				address ? (
-					<h1>Update the address...</h1>
+					<>
+						<h1>Update the address...</h1>
+						<div className='d-flex flex-column mb-3'>
+							<div className='mb-3'>line 1: <strong>{address.line1}</strong></div>
+							<div className='mb-3'>line 2: <strong>{address.line2}</strong></div>
+							<div className='mb-3'>City: <strong>{address.city}</strong></div>
+							<div className='mb-3'>Country: <strong>{address.country}</strong></div>
+							<div className='mb-3'>Postal Code: <strong>{address.postcode}</strong></div>
+							<div className='mb-3'>Updated at: <strong>{address.updated_at}</strong></div>
+							<div className='mb-3'>Created at: <strong>{address.created_at}</strong></div>
+						</div>
+					</>
 				) : (
 					<h1>Create a new address...!</h1>
 				)

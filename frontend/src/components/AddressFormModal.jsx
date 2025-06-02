@@ -5,8 +5,6 @@ import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
 
 const initialState = {
-	user: '',
-	transaction: '',
 	line1: '',
 	line2: '',
 	country: '',
@@ -17,43 +15,14 @@ const initialState = {
 const AddressFormModal = ({ onSuccess, address = null }) => {
 	const [formData, setFormData] = useState(initialState)
 	const [formErrors, setFormErrors] = useState(initialState)
-	const [transactions, setTransactions] = useState({
-		count: 0,
-		next: null,
-		previous: null,
-		results: []
-	})
 	const { user } = useAuth()
 
 	useEffect(() => {
-		const getTransactions = async () => {
-			const response = await fetch(`${API.transactions}/without_address`, {
-				method: 'GET',
-				credentials: 'include'
-			})
-
-			if (response.status == 200) {
-				setTransactions(await response.json())
-			}
-			else {
-				setError('Error fetching data...!')
-			}
-		}
-
-		setFormData(address ?? {
-			user: user.id,
-			transaction: '',
-			line1: '',
-			line2: '',
-			country: '',
-			city: '',
-			postcode: '',
-		})
-
-		getTransactions()
+		setFormData(address ?? initialState)
 	}, [address])
 
 	const onSubmit = async () => {
+		const formDataWithUser = { ...formData, user: user.id };
 		setFormErrors(initialState)
 
 		let response
@@ -65,7 +34,7 @@ const AddressFormModal = ({ onSuccess, address = null }) => {
 					'Content-Type': 'application/json',
 					'X-CSRFToken': getCookie('csrftoken'),
 				},
-				body: JSON.stringify(formData),
+				body: JSON.stringify(formDataWithUser),
 				credentials: 'include'
 			})
 		}
@@ -76,7 +45,7 @@ const AddressFormModal = ({ onSuccess, address = null }) => {
 					'Content-Type': 'application/json',
 					'X-CSRFToken': getCookie('csrftoken'),
 				},
-				body: JSON.stringify(formData),
+				body: JSON.stringify(formDataWithUser),
 				credentials: 'include'
 			})
 		}
@@ -106,10 +75,6 @@ const AddressFormModal = ({ onSuccess, address = null }) => {
 	return (
 		<FormModel edit={!!address} title='address' onSubmit={onSubmit}>
 			<>
-				<input
-					name='user'
-					type='hidden'
-					value={formData.user} />
 				<div>
 					<div className='form-item'>
 						<label htmlFor='line1'>Line 1</label>
@@ -167,28 +132,6 @@ const AddressFormModal = ({ onSuccess, address = null }) => {
 							value={formData.postcode}
 							onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
 							placeholder='Enter postcode' />
-					</div>
-					<div className='error'>{formErrors.postcode}</div>
-				</div>
-				<div>
-					<div className='form-item'>
-						<label htmlFor='transaction'>Transaction</label>
-						<select
-							className='form-control'
-							name='transaction'
-							onChange={(e) => setFormData({ ...formData, transaction: e.target.value })}
-						>
-							<option value=''>select</option>
-							{
-								transactions.results.map((transaction) => (
-									<option
-										value={transaction.id}
-										key={transaction.id}
-
-									>{transaction.idempotency_key}</option>
-								))
-							}
-						</select>
 					</div>
 					<div className='error'>{formErrors.postcode}</div>
 				</div>
