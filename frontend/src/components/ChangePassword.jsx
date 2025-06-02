@@ -52,11 +52,12 @@ const ChangePassword = () => {
 	return (
 		<div>
 			<h1>Change password</h1>
-			<form onSubmit={updatePassword} className='form'>
-				<div>
+			<form onSubmit={updatePassword} className='form gap-3'>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='old_password'>Old password</label>
 						<input
+							className='form-control'
 							name='old_password'
 							type='password'
 							value={formData.old_password}
@@ -65,10 +66,11 @@ const ChangePassword = () => {
 					</div>
 					<div className='error'>{formErrors.old_password}</div>
 				</div>
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='new_password1'>New Password</label>
 						<input
+							className='form-control'
 							name='new_password1'
 							type='password'
 							value={formData.new_password1}
@@ -77,10 +79,11 @@ const ChangePassword = () => {
 					</div>
 					<div className='error'>{formErrors.new_password1}</div>
 				</div>
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='new_password2'>Confirm password</label>
 						<input
+							className='form-control'
 							name='new_password2'
 							type='password'
 							value={formData.new_password2}
@@ -89,10 +92,11 @@ const ChangePassword = () => {
 					</div>
 					<div className='error'>{formErrors.new_password2}</div>
 				</div>
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='keep_current_session'>
 							<input
+								className='mx-3'
 								name='keep_current_session'
 								type='checkbox'
 								checked={formData.keep_current_session}

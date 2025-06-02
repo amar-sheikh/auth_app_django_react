@@ -37,16 +37,19 @@ const ForgetPassword = () => {
 	}
 
 	return (
-		<div>
-			<Button onClick={() => navigate(-1)}>Go to back</Button>
+		<div className='m-5'>
+			<div className='d-flex justify-content-center'>
+				<Button onClick={() => navigate(-1)}>Go to back</Button>
+			</div>
 			<hr />
 			<h1>Forget password</h1>
-			<form onSubmit={sendResetPasswordMail} className='form'>
+			<form onSubmit={sendResetPasswordMail} className='form gap-3'>
 				<div className='error'>{error}</div>
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='username'>Username</label>
 						<input
+							className='form-control'
 							name='username'
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}

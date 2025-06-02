@@ -58,11 +58,13 @@ const ResetPassword = () => {
 	}
 
 	return (
-		<div>
-			<Button onClick={() => navigate(-1)}>Go to back</Button>
+		<div className='m-5'>
+			<div className='d-flex justify-content-center'>
+				<Button onClick={() => navigate(-1)}>Go to back</Button>
+			</div>
 			<hr />
 			<h1>Reset password</h1>
-			<form onSubmit={resetPassword} className='form'>
+			<form onSubmit={resetPassword} className='form gap-3'>
 				<input
 					name='uid'
 					type='hidden'
@@ -71,10 +73,11 @@ const ResetPassword = () => {
 					name='token'
 					type='hidden'
 					value={formData.uid} />
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='new_password1'>New Password</label>
 						<input
+							className='form-control'
 							name='new_password1'
 							type='password'
 							value={formData.new_password1}
@@ -83,10 +86,11 @@ const ResetPassword = () => {
 					</div>
 					<div className='error'>{formErrors.new_password1}</div>
 				</div>
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='new_password2'>Confirm password</label>
 						<input
+							className='form-control'
 							name='new_password2'
 							type='password'
 							value={formData.new_password2}

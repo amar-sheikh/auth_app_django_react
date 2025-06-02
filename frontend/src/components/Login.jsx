@@ -41,25 +41,27 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <ConnectBackend />
+    <div className='my-4'>
+      <div className='d-flex justify-content-center'><ConnectBackend /></div>
       <h1>Login your account</h1>
-      <form onSubmit={login} className='form'>
+      <form onSubmit={login} className='form gap-3'>
         <div className='error'>{error}</div>
-        <div>
+				<div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='username'>User name</label>
             <input
+              className='form-control'
               name='username'
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               placeholder='Enter username' />
           </div>
         </div>
-        <div>
+				<div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='password'>Password</label>
             <input
+              className='form-control'
               name='password'
               type='password'
               value={formData.password}
@@ -71,9 +73,11 @@ const Login = () => {
           <Button type='submit'>Login</Button>
         </div>
       </form>
-      <div><Link to='/forget-password' >Forget password?</Link></div>
-      <div>
-        Don't have account? <Link to='/signup'>Sign Up</Link>
+      <div className='d-flex flex-column align-items-center justify-content-center'>
+        <div className='my-3'><Link to='/forget-password' >Forget password?</Link></div>
+        <div className='my-3'>
+          Don't have account? <Link to='/signup'>Sign Up</Link>
+        </div>
       </div>
     </div>
   )
