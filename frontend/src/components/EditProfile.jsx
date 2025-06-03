@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
   id: '',
@@ -41,7 +42,7 @@ const EditProfile = () => {
 
     if (response.status === 200) {
       setLoading(true)
-      navigate('/view')
+      navigate('/')
     } else {
       const data = await response.json()
 
@@ -56,15 +57,13 @@ const EditProfile = () => {
 
   return (
     <div>
-      <hr />
-      <button onClick={() => navigate(-1)}>Go to back</button>
-      <hr />
       <h1>Edit profile</h1>
-      <form onSubmit={update} className='form'>
-        <div>
-          <div className='form-item'>
+      <form onSubmit={update} className='form gap-3'>
+      <div className='mx-auto'>
+        <div className='form-item'>
             <label htmlFor='first_name'>First name</label>
             <input
+              className='form-control'
               name='first_name'
               value={formData.first_name}
               onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
@@ -72,10 +71,11 @@ const EditProfile = () => {
           </div>
           <div className='error'>{formErrors.first_name}</div>
         </div>
-        <div>
-          <div className='form-item'>
+      <div className='mx-auto'>
+        <div className='form-item'>
             <label htmlFor='last_name'>Last name</label>
             <input
+              className='form-control'
               name='last_name'
               value={formData.last_name}
               onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
@@ -83,22 +83,23 @@ const EditProfile = () => {
           </div>
           <div className='error'>{formErrors.last_name}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='username'>User name</label>
             <input
+              className='form-control'
               name='username'
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               placeholder='Enter username' />
-            <span>This name will be used for login</span>
           </div>
           <div className='error'>{formErrors.username}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='email'>Email</label>
             <input
+              className='form-control'
               name='email'
               type='email'
               value={formData.email}
@@ -108,7 +109,7 @@ const EditProfile = () => {
           <div className='error'>{formErrors.email}</div>
         </div>
         <div className='form-submit'>
-          <button type='submit'>Update</button>
+          <Button type='submit'>Update</Button>
         </div>
       </form>
     </div>

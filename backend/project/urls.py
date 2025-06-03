@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from debug_toolbar.toolbar import debug_toolbar_urls
 from .views import health
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/', include('app.urls')),
     path('auth/', include('accounts.urls')),
     path('health', health)
-]
+] + debug_toolbar_urls()

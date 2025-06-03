@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
   first_name: '',
@@ -48,13 +49,14 @@ const SignUp = () => {
   }
 
   return (
-    <div>
+    <div className='my-4'>
       <h1>Register an account</h1>
-      <form onSubmit={register} className='form'>
-        <div>
+      <form onSubmit={register} className='form gap-3'>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='first_name'>First name</label>
             <input
+              className='form-control'
               name='first_name'
               value={formData.first_name}
               onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
@@ -62,10 +64,11 @@ const SignUp = () => {
           </div>
           <div className='error'>{formErrors.first_name}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='last_name'>Last name</label>
             <input
+              className='form-control'
               name='last_name'
               value={formData.last_name}
               onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
@@ -73,22 +76,23 @@ const SignUp = () => {
           </div>
           <div className='error'>{formErrors.last_name}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='username'>User name</label>
             <input
+              className='form-control'
               name='username'
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               placeholder='Enter username' />
-            <span>This name will be used for login</span>
           </div>
           <div className='error'>{formErrors.username}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='email'>Email</label>
             <input
+              className='form-control'
               name='email'
               type='email'
               value={formData.email}
@@ -97,10 +101,11 @@ const SignUp = () => {
           </div>
           <div className='error'>{formErrors.email}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='password1'>Password</label>
             <input
+              className='form-control'
               name='password1'
               type='password'
               value={formData.password1}
@@ -109,10 +114,11 @@ const SignUp = () => {
           </div>
           <div className='error'>{formErrors.password1}</div>
         </div>
-        <div>
+        <div className='mx-auto'>
           <div className='form-item'>
             <label htmlFor='password2'>Confirm password</label>
             <input
+              className='form-control'
               name='password2'
               type='password'
               value={formData.password2}
@@ -121,12 +127,14 @@ const SignUp = () => {
           </div>
           <div className='error'>{formErrors.password2}</div>
         </div>
-        <div className='form-submit'>
-          <button type='submit'>Sign Up</button>
+        <div className='mx-auto form-submit'>
+          <Button type='submit'>Sign Up</Button>
         </div>
       </form>
-      <div>
-        Already have account? <Link to='/login'>Login</Link>
+      <div className='d-flex justify-content-center'>
+        <div>
+          Already have account? <Link to='/login'>Login</Link>
+        </div>
       </div>
     </div>
   )

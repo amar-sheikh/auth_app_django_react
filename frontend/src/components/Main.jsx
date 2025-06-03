@@ -1,30 +1,52 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Alert } from 'react-bootstrap'
 import { API } from '../api'
+import AddressFormModal from './AddressFormModal'
 
 const Main = () => {
-	const [message, setMessage] = useState('Connecting to database...!')
-	const navigate = useNavigate()
+	const [address, setAddress] = useState(null)
+	const [error, setError] = useState('')
 
 	useEffect(() => {
-		fetch(API.health, {
-			method: 'GET'
-		})
-			.then(response => {
-				if (response.status === 200) {
-					setTimeout(() => {
-						setMessage('Backend connected successfully...!')
-						navigate('/login')
-					}, 300)
-				}
-			})
-			.catch(() => {
-				setMessage('Error connecting backend...!')
-			})
+		getAddress()
 	}, [])
 
+	const getAddress = async () => {
+		const response = await fetch(`${API.addresses}/current_address`, {
+			method: 'GET',
+			credentials: 'include'
+		})
+
+		if (response.status == 200) {
+			const data = await response.json()
+			setAddress(data.current_address)
+		}
+		else {
+			setError('Error fetching data...!')
+		}
+	}
+
 	return (
-		<div>{message}</div>
+		<>
+			{error && <Alert variant='danger'>{error} </Alert>}
+			<h1>Current Address details</h1>
+			<div className='d-flex flex-column mb-3'>
+				<div className='mb-3'>line 1: <strong>{address?.line1}</strong></div>
+				<div className='mb-3'>line 2: <strong>{address?.line2}</strong></div>
+				<div className='mb-3'>City: <strong>{address?.city}</strong></div>
+				<div className='mb-3'>Country: <strong>{address?.country}</strong></div>
+				<div className='mb-3'>Postal Code: <strong>{address?.postcode}</strong></div>
+				<div className='mb-3'>Updated at: <strong>{address?.updated_at}</strong></div>
+				<div className='mb-3'>Created at: <strong>{address?.created_at}</strong></div>
+			</div>
+			{
+				address?.have_transactions ? (
+					<AddressFormModal onSuccess={getAddress} />
+				) : (
+					<AddressFormModal address={address} onSuccess={getAddress} />
+				)
+			}
+		</>
 	)
 }
 

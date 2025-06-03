@@ -1,5 +1,4 @@
 import pytest
-from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core import mail
 from django.test import Client
@@ -10,8 +9,8 @@ import json
 import time
 
 @pytest.fixture
-def user():
-    return User.objects.create_user(
+def user(django_user_model):
+    return django_user_model.objects.create_user(
         username='user1',
         email='user1@xyz.com',
         password='Password#123',
@@ -307,8 +306,8 @@ class TestUpdateUserView:
         assert response.status_code == 401
         assert json.loads(response.content)['error'] == 'User not authenticated.'
 
-    def test_update_user_view_with_username_already_exists(self, logged_in_client, form_attributes):
-        user1 = User.objects.create_user(username='user2')
+    def test_update_user_view_with_username_already_exists(self, logged_in_client, form_attributes, django_user_model):
+        django_user_model.objects.create_user(username='user2')
 
         response = logged_in_client.post(reverse('update'),
             data=json.dumps(form_attributes),
@@ -318,8 +317,8 @@ class TestUpdateUserView:
         assert response.status_code == 400
         assert 'A user with that username already exists.' in json.loads(response.content)['errors']['username']
 
-    def test_update_user_view_with_email_already_exists(self, logged_in_client, form_attributes):
-        user1 = User.objects.create_user(username='user3', email='user2@xyz.com')
+    def test_update_user_view_with_email_already_exists(self, logged_in_client, form_attributes, django_user_model):
+        django_user_model.objects.create_user(username='user3', email='user2@xyz.com')
 
         response = logged_in_client.post(reverse('update'),
             data=json.dumps(form_attributes),

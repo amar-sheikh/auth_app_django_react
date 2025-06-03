@@ -9,5 +9,7 @@ export const API = {
     update: 'http://localhost:8000/auth/update',
     update_password: 'http://localhost:8000/auth/update-password',
     send_password_reset_email: 'http://localhost:8000/auth/send-password-reset-email',
-    reset_password: 'http://localhost:8000/auth/reset-password'
+    reset_password: 'http://localhost:8000/auth/reset-password',
+    addresses: 'http://localhost:8000/api/v1/addresses',
+    transactions: 'http://localhost:8000/api/v1/transactions',
 }

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import { Button } from 'react-bootstrap'
 
 const initialState = {
 	uid: '',
@@ -57,12 +58,13 @@ const ResetPassword = () => {
 	}
 
 	return (
-		<div>
-			<hr />
-			<button onClick={() => navigate(-1)}>Go to back</button>
+		<div className='m-5'>
+			<div className='d-flex justify-content-center'>
+				<Button onClick={() => navigate(-1)}>Go to back</Button>
+			</div>
 			<hr />
 			<h1>Reset password</h1>
-			<form onSubmit={resetPassword} className='form'>
+			<form onSubmit={resetPassword} className='form gap-3'>
 				<input
 					name='uid'
 					type='hidden'
@@ -71,10 +73,11 @@ const ResetPassword = () => {
 					name='token'
 					type='hidden'
 					value={formData.uid} />
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='new_password1'>New Password</label>
 						<input
+							className='form-control'
 							name='new_password1'
 							type='password'
 							value={formData.new_password1}
@@ -83,10 +86,11 @@ const ResetPassword = () => {
 					</div>
 					<div className='error'>{formErrors.new_password1}</div>
 				</div>
-				<div>
+				<div className='mx-auto'>
 					<div className='form-item'>
 						<label htmlFor='new_password2'>Confirm password</label>
 						<input
+							className='form-control'
 							name='new_password2'
 							type='password'
 							value={formData.new_password2}
@@ -96,7 +100,7 @@ const ResetPassword = () => {
 					<div className='error'>{formErrors.new_password2}</div>
 				</div>
 				<div className='form-submit'>
-					<button type='submit'>Set Password</button>
+					<Button type='submit'>Set Password</Button>
 				</div>
 			</form>
 		</div>

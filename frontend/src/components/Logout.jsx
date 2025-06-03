@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { getCookie } from '../helper'
 import { useAuth } from '../contexts/AuthContext'
+import { Button } from 'react-bootstrap'
 
 const Logout = () => {
   const [error, setError] = useState('')
@@ -58,12 +59,13 @@ const Logout = () => {
       {
         user ? (
           <>
-            <button onClick={() => navigate(-1)}>Go to back</button>
-            <hr />
+            <h1>Logout</h1>
             <div className='error'>{error}</div>
-            <h2>Hi {user.username} - Do you want to logout or logged out from all devices?</h2>
-            <button onClick={logout}>Logout</button>
-            <button onClick={logoutFromAllDevices}>Logout from all devices</button>
+            <h3 className='text-center text-secondary'>Do you want to logout or logged out from all devices?</h3>
+            <div className='d-flex justify-content-around'>
+              <Button variant='danger' onClick={logout}>Logout</Button>
+              <Button variant='warning' onClick={logoutFromAllDevices}>Logout from all devices</Button>
+            </div>
           </>
         ) : (
           <div>Loading....</div>

@@ -1,5 +1,4 @@
 import pytest
-from django.contrib.auth.models import User
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm
 
 @pytest.mark.django_db
@@ -16,15 +15,15 @@ class TestCustomUserCreationForm:
             'last_name': '123'
         }
 
-    def test_user_creation_form(self, form_attributes):
-        assert User.objects.count() == 0
+    def test_user_creation_form(self, django_user_model, form_attributes):
+        assert django_user_model.objects.count() == 0
 
         form = CustomUserCreationForm(form_attributes)
 
         assert form.is_valid()
         form.save()
-        assert User.objects.count() == 1
-        user = User.objects.last()
+        assert django_user_model.objects.count() == 1
+        user = django_user_model.objects.last()
         assert user.username == 'user1'
         assert user.email == 'user1@xyz.com'
         assert user.first_name == 'abc'
@@ -41,16 +40,16 @@ class TestCustomUserCreationForm:
         assert 'This field is required.' in form.errors['first_name']
         assert 'This field is required.' in form.errors['last_name']
 
-    def test_user_creation_form_with_username_already_exists(self, form_attributes):
-        User.objects.create(username= 'user1', email='user2@xyz.com')
+    def test_user_creation_form_with_username_already_exists(self, django_user_model, form_attributes):
+        django_user_model.objects.create(username= 'user1', email='user2@xyz.com')
 
         form = CustomUserCreationForm(form_attributes)
 
         assert not form.is_valid()
         assert 'A user with that username already exists.' in form.errors['username']
 
-    def test_user_creation_form_with_email_already_exists(self, form_attributes):
-        User.objects.create(username= 'user2', email='user1@xyz.com')
+    def test_user_creation_form_with_email_already_exists(self, django_user_model, form_attributes):
+        django_user_model.objects.create(username= 'user2', email='user1@xyz.com')
 
         form = CustomUserCreationForm(form_attributes)
 
@@ -105,8 +104,8 @@ class TestCustomUserCreationForm:
 class TestCustomUserChangeForm:
 
     @pytest.fixture
-    def user(self):
-        return User.objects.create(
+    def user(self, django_user_model):
+        return django_user_model.objects.create(
             username= 'user1',
             email= 'user1@xyz.com',
             first_name= 'abc',
